@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <script src="/static/assets/js/echarts.min.js"></script>
+  <title>Hotel Analysis</title>
+  <meta content="" name="descriptison">
+  <meta content="" name="keywords">
+
+  <!-- analysiss -->
+  <link href="static/assets/img/analysis.png" rel="icon">
+  <link href="static/assets/img/analysis.png" rel="analysis">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="static/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/icofont/icofont.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/owl.carousel/static/assets/owl.carousel.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/venobox/venobox.css" rel="stylesheet">
+  <link href="static/assets/vendor/aos/aos.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="static/assets/css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top">
+    <div class="container d-flex">
+
+      <div class="logo mr-auto">
+        <h1 class="text-light"><a>Hotel Analysis</a></h1>
+      </div>
+
+      <nav class="nav-menu d-none d-lg-block">
+        <ul>
+          <li class="active"><a href="#header">Home</a></li>
+          <li><a href="#star">Star Rating</a></li>
+          <li><a href="#price">Price</a></li>
+          <li><a href="#evaluations">Evaluation</a></li>
+          <li><a href="#facility">Facility</a></li>
+          <li><a href="#room">Room</a></li>
+
+          <li class="get-started"><a href="#star">Get Started</a></li>
+        </ul>
+      </nav><!-- .nav-menu -->
+
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="d-flex align-items-center">
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 d-lg-flex flex-lg-column justify-content-center align-items-stretch pt-5 pt-lg-0 order-2 order-lg-1" data-aos="fade-up">
+          <div>
+            <h1>Hotel Data Visualization Analysis</h1>
+            <h2>酒店数据集来源于Kaggle，包括酒店名称，所在国家、街道、地区，评分，客人评论，便利设施，房间类型，价格，官方描述等信息，
+                总共有七万余条数据，分析各个方面之间的联系</h2>
+            <a href="https://www.kaggle.com/" target="_blank" class="download-btn"><i class="bx bxl-kaggle"></i> Kaggle</a>
+            <a href="https://echarts.apache.org/zh/index.html" target="_blank" class="download-btn"><i class="bx bxl-echarts"></i> Echarts</a>
+          </div>
+        </div>
+        <div class="col-lg-6 d-lg-flex flex-lg-column align-items-stretch order-1 order-lg-2 hello-img" data-aos="fade-up">
+          <img src="static/assets/img/hello-img.png" class="img-fluid" alt="">
+        </div>
+      </div>
+    </div>
+
+  </section><!-- End Hero -->
+
+  <main id="main">
+
+    <!-- ======= Location and Star rating Section ======= -->
+    <section id="star" class="star">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Location and Star rating</h2>
+          <p>该部分主要分析各国酒店分布与星级分布之间的关系，包括各国酒店的星级均值和星级的酒店数量</p>
+        </div>
+          <div id="my-star" style="width: 1150px;height: 300px">
+              <script type="text/javascript">
+                   var myChart = echarts.init(document.getElementById("my-star"));
+                   var option;
+                   option = {
+                       color : ['#5777ba'],
+                       title : {
+                            color: ['#515f7d'],
+                           text:'Location and Star rating'
+                       },
+                       tooltip: { // 鼠标悬浮提示框显示 X和Y 轴数据
+                         trigger: 'axis',
+                         axisPointer: {// 坐标轴指示器，坐标轴触发有效
+                             type: 'shadow',
+                         },
+                       },
+                       xAxis: {
+                           type : 'category',
+                           data : {{ location | tojson }},
+                       },
+                       yAxis:[
+                       {
+                          type: 'value',
+                          name:'平均星级',
+                          min: 0,
+                          max: 5,
+                          splitNumber:5,
+                           interval: 1
+                        },{
+                           type: 'value',
+                           name:'星级酒店数量',
+                           min:0,
+                           max:14000,
+                           splitNumber:5,
+                           interval:14000/5
+                       },],
+                       grid : {
+                           left : '3%',
+                           right : '4%',
+                           bottom : '3%',
+                           containLabel: true
+                       },
+                       series: [
+                           {
+                               name:'平均星级',
+                               data: {{ mean }},
+                               type: 'line',
+                               symbolSize:10,
+                                itemStyle: {
+                                  normal: {
+                                    color: "#585a61", //改变折线点的颜色
+                                    lineStyle: {
+                                      color: "#585a61", //改变折线颜色
+                                    },
+                                  },
+
+				            },
+                           },
+                           {
+                               name:'星级酒店数量',
+                               data: {{ num }},
+                               type: 'bar',
+                               yAxisIndex: 1,
+                               barWidth: '60%',
+                               itemStyle : {
+                                   normal: {
+                                       label : {show: true,color:'#5777ba',fontsize: 5,position:'top'},
+                                       // 将函数粘贴至此处
+                                      color: function (params) {
+                                        // 定义换色数组
+                                        var colorList = ['#5777ba', '#c9d6eb']
+                                        if (params.dataIndex % 2 == 0) {
+                                          return colorList[0]
+                                        } else {
+                                          return colorList[1]
+                                        }
+                                      },
+                                   }
+                               },
+                           },
+                       ]
+                      };
+                      this.myChart.setOption(option)
+               </script>
+          </div>
+        <div>
+          <div class=" order-2 order-lg-1" style="width: 100%" >
+            <div class="content d-flex flex-column">
+                <div class="col-md-auto icon-box" data-aos="fade-up">
+                  <i class="bx bx-receipt"></i>
+                  <h4>结论概述</h4>
+                  <p>总体而言，美国和欧洲国家（比如法国、意大利）的星级酒店数量较多，可能与地区的经济发展情况相关。
+                      但是平均星级和该国家的酒店数量没有直接关系。 有些国家（比如新西兰）星级酒店不多，但平均星级较高；
+                      而美国含有众多星级酒店，平均星级只有3.7；也存在数量少且星级低的情况</p>
+                </div>
+
+                <div class="col-md-auto icon-box" data-aos="fade-up" data-aos-delay="200">
+                  <i class="bx bx-cube-alt"></i>
+                  <h4>星级均值分析</h4>
+                  <p>可以看到星级均值在4.0上下浮动，平均星级较高的国家，如南非可以到达4.181，而平均星级较低的国家，如土耳其则只有3.471。
+                      在图表中可以看到，平均星级高于4.0的国家占少数。含有众多星级酒店的美国，星级均值较低，推测可能是因为存在部分星级较低的酒店使得平均值降低</p>
+                </div>
+
+                <div class="col-md-auto icon-box" data-aos="fade-up" data-aos-delay="400">
+                  <i class="bx bx-shield"></i>
+                  <h4>星级数量分析</h4>
+                  <p>由于数据量过大的原因，此处只显示星级酒店数量在600以上的国家。
+                      其中，美国含有的星级酒店数量远高于其他国家，是数量排名第二的英国的两倍左右</p>
+                </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End Location and Star rating Section -->
+
+    <!-- ======= Price Section ======= -->
+    <section id="price" class="price">
+      <div class="container">
+        <div class="section-title">
+          <h2>Location and Price</h2>
+          <p>该部分主要分析各国酒店分布与价格之间的关系</p>
+        </div>
+        <div class="row content">
+          <div class="col-md-4" data-aos="fade-right">
+              <div id="hotel-price" style="width: 380px;height: 400px">
+                  <script type="text/javascript">
+                      var myChart = echarts.init(document.getElementById("hotel-price"));
+                      var barHeight = 50;
+                      option = {
+                          color:'#ffaab5',
+                          title: {
+                              color: ['#515f7d'],
+                            text: 'Location and Price',
+                          },
+                          legend: {y: 370,
+                                    x: 30,},
+                          grid : {
+                           left : '3%',
+                           right : '4%',
+                           bottom : '3%',
+                           containLabel: true
+                          },
+                           xAxis: {
+                            type: 'value',
+                            name:'平均价格',
+                            min:100,
+                            max:350,
+                            splitNumber:5,
+                          },
+                          tooltip: {
+                            show: true,
+                          },
+                          yAxis: {
+                            type: 'category',
+                              name:'国家',
+                            data: {{ country|tojson }}
+                          },
+                          series: [
+                            {
+                              name: '均价',
+                              type: 'bar',
+                              data: {{ price }},
+                                itemStyle : {
+                                   normal: {
+                                       // 将函数粘贴至此处
+                                      color: function (params) {
+                                        // 定义换色数组
+                                        var colorList = [ '#ffaab5','#fbdee2']
+                                        if (params.dataIndex % 2 == 0) {
+                                          return colorList[0]
+                                        } else {
+                                          return colorList[1]
+                                        }
+                                      },
+                                   }
+                               },
+                            },
+                          ]
+                        };
+                      this.myChart.setOption(option)
+                  </script>
+              </div>
+          </div>
+          <div class="col-md-8 pt-4" data-aos="fade-up">
+            <h3>不同国家酒店均价</h3>
+            <p class="font-italic">
+              左图为不同国家的酒店平均价格，因为原数据集中价格数据有部分缺失，
+                因此选择有价格信息较多的酒店且该国家有较多酒店的数据进行统计，使得统计结果更加有参考意义。是在第一部分探索结果上进一步探索
+            </p>
+            <ul>
+              <li><i class="icofont-check" style="color: #ffaab5"></i>泰国酒店均价在统计国家中最高</li>
+              <li><i class="icofont-check" style="color: #ffaab5"></i>加拿大酒店均价在统计国家中最低</li>
+              <li><i class="icofont-check" style="color: #ffaab5"></i>美国有大量星级酒店，但酒店均价不高</li>
+              <li><i class="icofont-check" style="color: #ffaab5"></i>中国星级酒店均价在统计国家中居中位</li>
+            </ul>
+            <p>
+              结论概述：酒店均价在200以下的约占80%，最低均价和最高均价相差较大，较为发达的国家均价饭而更低
+            </p>
+          </div>
+        </div>
+
+
+      </div>
+    </section><!-- End price Section -->
+
+    <!-- ======= Evaluation Section ======= -->
+    <section id="evaluations" class="evaluations section-bg">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Star rating and Guest evaluation</h2>
+          <p>该部分主要分析星级分布与客人评分分布之间的关系</p>
+        </div>
+
+        <div style="width: 1000px;height: 500px" id="evaluation">
+            <script type="text/javascript">
+                var myChart = echarts.init(document.getElementById("evaluation"));
+                option = {
+                    title: {
+                        text: 'Star rating and Guest evaluation',
+                        color: '#515f7d',
+                    },
+                    legend: {
+                        data: ['一星级','二星级','三星级','四星级','五星级'],
+                    },
+                    tooltip:{
+                        show: true,
+                    },
+                    radar: [
+                        {
+                            indicator: [
+                                { text: 'Excellent', max: 1,min:0},
+                                { text: 'Good' ,max: 1,min:0},
+                                { text: 'Average' ,max: 1,min:0},
+                                { text: 'Poor' ,max: 1,min:0},
+                                { text: 'Terrible' ,max: 1,min:0}
+                            ],
+                            center: ['25%', '50%'],
+                            radius: 190,
+                            startAngle: 90,
+                            splitNumber: 5,
+                            shape: 'circle',
+                            name: {
+                                formatter:'【{value}】',
+                                textStyle: {
+                                    color:'#72ACD1'
+                                }
+                            },
+                            splitArea: {
+                                areaStyle: {
+                                    color: ['rgba(114, 172, 209, 0.2)',
+                                    'rgba(114, 172, 209, 0.4)'],
+                                    shadowColor: 'rgba(0, 0, 0, 0.3)',
+                                    shadowBlur: 10
+                                }
+                            },
+                            axisLine: {
+                                lineStyle: {
+                                    color: 'rgba(255, 255, 255, 0.5)'
+                                }
+                            },
+                            splitLine: {
+                                lineStyle: {
+                                    color: 'rgba(255, 255, 255, 0.5)'
+                                }
+                            }
+                        },
+                    ],
+                    series: [{
+                            type: 'radar',
+                            data: [{
+                                    value: {{ fivestart[0] }},
+                                    name:'一星级',
+                                },
+                                {
+                                    value: {{ fivestart[1] }},
+                                    name:'二星级',
+                                },
+                                {
+                                    value: {{ fivestart[2] }},
+                                    name:'三星级',
+                                },
+                                {
+                                    value: {{ fivestart[3] }},
+                                    name:'四星级',
+                                },
+                                {
+                                    value: {{ fivestart[4] }},
+                                    name:'五星级',
+                                },
+                            ]
+                        },
+                    ]
+                }
+                myChart.setOption(option)
+            </script>
+        </div>
+         <div class=" order-2 order-lg-1" style="width: 100%" >
+            <div class="content d-flex flex-column">
+                <div class="col-md-auto icon-box" data-aos="fade-up">
+                  <h4>结论概述</h4>
+                  <p>从上面的雷达图可以看到，酒店星级和客人的评价有明显关联，酒店星级越高，客人的好评比例（Excellent、Good）也越高，
+                      对于五星级酒店，没有出现中评（Average）和差评（Poor、Terrible），四星酒店好评占比虽稍低于五星，但仍然远高于较低星级酒店。
+                      而一星级酒店和二星级酒店则有大量差评，好评比例远远低于差评。
+                      随着星级变化，好评和差评的比例也发生显著变化。
+                      随着酒店星级的上涨，有差评比例快速减少，好评比例快速增加的趋势。
+                      处于中档水平的三星级酒店，多种评价分布最为均衡，与其所在星级相符。从上面的分析也可以看出，星级评价和客人的评价基本是一致的</p>
+                </div>
+            </div>
+          </div>
+
+      </div>
+    </section><!-- End evaluations Section -->
+
+    <!-- ======= Facility Section ======= -->
+    <section id="facility" class="facility">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Star rating and Facility</h2>
+          <p>该部分主要分析不同星级酒店中最常见的设施</p>
+        </div>
+
+        <div class="row no-gutters">
+
+          <div class="col-lg-4 box featured" data-aos="fade-up" >
+            <h3>不同酒店设施</h3>
+            <ul>
+              <li><i class="bx bx-check"></i> Wifi</li>
+              <li><i class="bx bx-check"></i> Air conditioning</li>
+              <li><i class="bx bx-check"></i> Non-smoking rooms</li>
+              <li><i class="bx bx-check"></i>Meeting rooms</li>
+              <li><i class="bx bx-check"></i> Flatscreen TV</li>
+              <li><i class="bx bx-check"></i> Baggage storage</li>
+              <li><i class="bx bx-check"></i> Pool</li>
+              <li><i class="bx bx-check"></i> Refrigerator</li>
+            </ul>
+              <p>结论概述:含有无线网络的酒店最多，大部分酒店都有空调、电视机、存包设施、游泳池、冰箱。
+                  有这些设施的酒店，星级都较高，平均星级都在3.8左右，可以看到这些设施有酒店星级有密切关联，可以认为设施是酒店评星级重要部分</p>
+          </div>
+            <div style="width: 700px;padding-left: 40px" id="facilities">
+                <script type="text/javascript">
+                   var myChart = echarts.init(document.getElementById("facilities"));
+                   var option;
+                   option = {
+                       color : ['#5777ba'],
+                       title : {
+                            color: ['#515f7d'],
+                           text:'Star rating and Facility'
+                       },
+                       tooltip: { // 鼠标悬浮提示框显示 X和Y 轴数据
+                         trigger: 'axis',
+                         axisPointer: {// 坐标轴指示器，坐标轴触发有效
+                             type: 'shadow',
+                         },
+                       },
+                       xAxis: {
+                           type : 'category',
+                           data : {{ facility | tojson }},
+                           axisLabel:{
+                               interval:0,
+                               rotate:20,
+                           }
+                       },
+                       yAxis:[
+                       {
+                          type: 'value',
+                          name:'平均星级',
+                          min: 0,
+                          max: 5,
+                          splitNumber:5,
+                           interval: 1
+                        },{
+                           type: 'value',
+                           name:'酒店数量',
+                           min:0,
+                           max:70000,
+                           splitNumber:5,
+                           interval:70000/5
+                       },],
+                       grid : {
+                           left : '3%',
+                           right : '4%',
+                           bottom : '3%',
+                           containLabel: true
+                       },
+                       series: [
+                           {
+                               name:'平均星级',
+                               data: {{ facilityavg }},
+                               type: 'line',
+                               symbolSize:10,
+                                itemStyle: {
+                                  normal: {
+                                    color: "#585a61", //改变折线点的颜色
+                                    lineStyle: {
+                                      color: "#585a61", //改变折线颜色
+                                    },
+                                  },
+
+				            },
+                           },
+                           {
+                               name:'星级酒店数量',
+                               data: {{ facilitysum }},
+                               type: 'line',
+                               yAxisIndex: 1,
+                               symbolSize:10,
+                               itemStyle: {
+                                   normal: {
+                                       color: "#5777ba", //改变折线点的颜色
+                                       lineStyle: {
+                                           color: "#5777ba", //改变折线颜色
+                                       },
+                                   },
+                               },
+                               areaStyle: { // 区域填充样式
+                                   color: { // 填充的颜色 // 线性渐变
+                                       type: 'linear',
+                                       x: 0,
+                                       y: 0,
+                                       x2: 0,
+                                       y2: 1,
+                                       colorStops: [
+                                           {
+                                               offset: 0,
+                                               color: '#eff2f8', // 0% 处的颜色
+                                           },
+                                           {
+                                               offset: 1,
+                                               color: '#47536e' // 100% 处的颜色
+                                           }
+                                       ],
+                                       global: false, // 缺省为 false
+                                   }
+                               }
+                               },
+                       ]
+                      };
+                   this.myChart.setOption(option)
+               </script>
+            </div>
+
+        </div>
+
+      </div>
+    </section><!-- End facility Section -->
+
+    <!-- ======= Room Section ======= -->
+    <section id="room" class="room">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Room type</h2>
+          <p>该部分主要分析不同房间类型所占比例</p>
+        </div>
+
+        <div class="row">
+            <div style="width: 600px;height: 500px;" id="room-type">
+                <script type="text/javascript">
+                    var myCharts = echarts.init(document.getElementById("room-type"));
+                    option = {
+                        title : {
+                            text: 'Room type',
+                            x:'center',
+                            color:'#47536e'
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                magicType : {
+                                    show: true,
+                                    type: ['pie', 'funnel']
+                                },
+                            }
+                        },
+                        calculable : true,
+                        series : [
+                            {
+                                name:'Room Type',
+                                type:'pie',
+                                radius : [40, 150],
+                                roseType : 'area',
+                                data:[{% for data in datas %}
+                                        {value:{{ datas[data] }}, name: '{{data}}'},
+                                    {% endfor %}],
+
+                                itemStyle : {
+                                   normal: {
+                                       // 将函数粘贴至此处
+                                      color: function (params) {
+                                        // 定义换色数组
+                                        var colorList = [ '#ffaab5','#fbdee2']
+                                        if (params.dataIndex % 2 == 0) {
+                                          return colorList[0]
+                                        } else {
+                                          return colorList[1]
+                                        }
+                                      },
+                                   }
+                               },
+                            }
+                        ]
+                    };
+                    myCharts.setOption(option)
+                </script>
+            </div>
+          <div>
+            <div class="row">
+              <div class="info" data-aos="fade-up" style="width: 500px;margin-left: 40px">
+                <i class="bx bx-map"></i>
+                <h4>结论概述</h4>
+                  <p>主要房间类型如下：</p>
+                  <p>城市景观房、海景房</p>
+                 <p>家庭套房、普通套房</p>
+                 <p>可吸烟房间、禁止吸烟房间</p>
+                <p>这些房间类型所占比例如右图所示</p>
+                <p>通过观察左图可以得出简单结论：</p>
+                  <p>
+                      主要房间类型为禁止吸烟房间、家庭套房、普通套房，数量明显多余城市景观房、海景房和可吸烟房间，
+                      推测主要原因在于前三种房型为比较常见类型，
+                      而后三种特别是城市景观房和海景房与酒店所在地理位置有关，可吸烟房间的设置可能有酒店出于安全考虑有关。
+                  </p>
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
+
+      </div>
+    </section><!-- End room Section -->
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+
+    <div class="container py-4">
+      <div class="copyright">Copyright &copy; 制作、分析：202000300070-谢天露</div>
+      <div class="credits"></div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="/static/assets/vendor/jquery/jquery.min.js"></script>
+  <script src="/static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+  <script src="/static/assets/vendor/php-email-form/validate.js"></script>
+  <script src="/static/assets/vendor/owl.carousel/owl.carousel.min.js"></script>
+  <script src="/static/assets/vendor/venobox/venobox.min.js"></script>
+  <script src="/static/assets/vendor/aos/aos.js"></script>
+  <!-- Template Main JS File -->
+  <script src="/static/assets/js/main.js"></script>
+</body>
+
+</html>
